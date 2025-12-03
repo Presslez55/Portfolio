@@ -175,103 +175,194 @@
         const Gamepad = ({ size = 24, className }) => (
             <Icon className={className}><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S19.17 9 20 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" /></Icon>
         );
-        const Linkedin = ({ size = 24, className }) => (
-            <Icon className={className}><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" /><rect width="4" height="12" x="2" y="9" /><circle cx="4" cy="4" r="2" /></Icon>
-        );
-        const Mail = ({ size = 24, className }) => (
-            <Icon className={className}><rect width="20" height="16" x="2" y="4" rx="2" /><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" /></Icon>
-        );
-        const ExternalLink = ({ size = 24, className }) => (
-            <Icon className={className}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></Icon>
-        );
-        const Code = ({ size = 24, className }) => (
-            <Icon className={className}><polyline points="16 18 22 12 16 6" /><polyline points="8 6 2 12 8 18" /></Icon>
-        );
-        const MenuIcon = ({ size = 24, className }) => (
-            <Icon className={className}><line x1="4" x2="20" y1="12" y2="12" /><line x1="4" x2="20" y1="6" y2="6" /><line x1="4" x2="20" y1="18" y2="18" /></Icon>
-        );
-        const XIcon = ({ size = 24, className }) => (
-            <Icon className={className}><path d="M18 6 6 18" /><path d="m6 6 12 12" /></Icon>
-        );
-        const Download = ({ size = 24, className }) => (
-            <Icon className={className}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" x2="12" y1="15" y2="3" /></Icon>
-        );
+
         const User = ({ size = 24, className }) => (
             <Icon className={className}><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></Icon>
         );
-        const Briefcase = ({ size = 24, className }) => (
-            <Icon className={className}><rect width="20" height="14" x="2" y="7" rx="2" ry="2" /><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" /></Icon>
-        );
+
         const Cpu = ({ size = 24, className }) => (
             <Icon className={className}><rect x="4" y="4" width="16" height="16" rx="2" /><rect x="9" y="9" width="6" height="6" /><path d="M15 2v2" /><path d="M15 20v2" /><path d="M2 15h2" /><path d="M2 9h2" /><path d="M20 15h2" /><path d="M20 9h2" /><path d="M9 2v2" /><path d="M9 20v2" /></Icon>
         );
 
-        // --- MAIN APP COMPONENT ---
+        const ArrowUp = ({ size = 24, className }) => (
+            <Icon className={className}><line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" /></Icon>
+        );
+
+        const ExternalLink = ({ size = 24, className }) => (
+            <Icon className={className}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></Icon>
+        );
+
+        const Mail = ({ size = 24, className }) => (
+            <Icon className={className}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></Icon>
+        );
+        const MenuIcon = ({ size = 24, className }) => (
+            <Icon className={className}><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></Icon>
+        );
+
+        const XIcon = ({ size = 24, className }) => (
+            <Icon className={className}><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></Icon>
+        );
+
+        // --- SPRITE ANIMATOR ---
+        const SpriteAnimator = ({ spriteSheet, frameWidth, frameHeight, states, initialState = 'idle', scale = 1 }) => {
+            const canvasRef = useRef(null);
+            const [currentState, setCurrentState] = useState(initialState);
+            const requestRef = useRef();
+            const frameRef = useRef(0);
+            const lastUpdateRef = useRef(0);
+
+            useEffect(() => {
+                const canvas = canvasRef.current;
+                const ctx = canvas.getContext('2d');
+                const image = new Image();
+                image.src = spriteSheet;
+
+                const animate = (time) => {
+                    if (!lastUpdateRef.current) lastUpdateRef.current = time;
+                    const deltaTime = time - lastUpdateRef.current;
+
+                    // Update frame every 100ms (10fps)
+                    if (deltaTime > 100) {
+                        const stateData = states[currentState];
+                        if (stateData) {
+                            const { row, frames } = stateData;
+                            frameRef.current = (frameRef.current + 1) % frames;
+
+                            ctx.clearRect(0, 0, canvas.width, canvas.height);
+                            ctx.drawImage(
+                                image,
+                                frameRef.current * frameWidth,
+                                row * frameHeight,
+                                frameWidth,
+                                frameHeight,
+                                0,
+                                0,
+                                frameWidth,
+                                frameHeight
+                            );
+                        }
+                        lastUpdateRef.current = time;
+                    }
+                    requestRef.current = requestAnimationFrame(animate);
+                };
+
+                image.onload = () => {
+                    canvas.width = frameWidth;
+                    canvas.height = frameHeight;
+                    requestRef.current = requestAnimationFrame(animate);
+                };
+
+                return () => cancelAnimationFrame(requestRef.current);
+            }, [spriteSheet, frameWidth, frameHeight, states, currentState]);
+
+            return (
+                <div
+                    className="sprite-container"
+                    style={{
+                        width: frameWidth * scale,
+                        height: frameHeight * scale,
+                        display: 'inline-block',
+                    }}
+                >
+                    <canvas
+                        ref={canvasRef}
+                        style={{
+                            width: '100%',
+                            height: '100%',
+                            imageRendering: 'pixelated'
+                        }}
+                    />
+                </div>
+            );
+        };
+
+        // --- DATA ---
+        const personalInfo = {
+            name: "Ali Zainal Abidin",
+            title: "Game Designer & 3D Artist",
+            bio: "Passionate about creating immersive gaming experiences.",
+            profileImage: "profile.jpg",
+            itchio: "https://presslez55.itch.io",
+            linkedin: "https://linkedin.com/in/ali-alhasni"
+        };
+
+        const skills = [
+            { category: '3D', items: ['Blender', 'Solid Edge'] },
+            { category: '2D', items: ['Photoshop', 'CorelDraw', 'InkScape', 'Krita'] },
+            { category: 'Pixel', items: ['Aseprite'] }
+        ];
+
+        const experience = [
+            {
+                project: "Project Bank Soal Pusat Assesment Pendidikan Kemendikbud",
+                role: "Junior Game Design",
+                period: "June - December 2024",
+                description: "Membedah, mekanik permainan untuk diimplementasikan ke dalam gamifikasi ujian sekolah berbasis komputer dalam bentuk simulasi. Juga membuat list kebutuhan asset dan UI/UX dalam permainan."
+            },
+            {
+                project: "Mandala: The Minds Journey",
+                role: "3D Artist",
+                period: "2024 - 2025",
+                description: "Membuat animasi gerak untuk karakter didalam game, yaitu Mandala (MC) dan Monster. Animasi gerak mandala meliputi (Jalan, Lari, Tertangkap, Idle, Bangun), sedangkan untuk Monster meliputi (Jalan, Lari, dan Menangkap)."
+
+            },
+            {
+                project: "The Buzzer is Real?",
+                role: "3D Artist",
+                period: "November 2025",
+                description: "Membuat animasi gerak untuk karakter didalam game, Yaitu Buzzers dan Voters. Animasi Buzzers dan Voters tidak jauh berbeda yaitu (Lari, Idle, dan Win)."
+
+            },
+            {
+                project: "Project: Moon",
+                role: "3D Artist",
+                period: "November 2025",
+                description: "Membuat 3D modelling pesawat sebagai karakter, dimana terdapat 4 jenis pesawat (Player dan Enemy)."
+
+            }
+        ];
+
+        const projects = [
+            {
+                title: "Mandala: The Minds Journey",
+                description: "The Mind’s Journey adalah sebuah game adventure 3D Psikological Horor, dimana pemain berperan sebagai Mandala seseorang yang terbangun di dunia yang hancur dan penuh teka-teki.",
+                tags: ["Unity", "Blender", "3D Animation"],
+                link: "https://jasuke-studio.itch.io/mandala-themindsjourney",
+                image: "mandala.png"
+            },
+            {
+                title: "The Buzzer is Real?",
+                description: "A 2,5D game where player collect as many loyal voters as possible and protect them from rival buzzers.",
+                tags: ["Unity", "Blender", "3D Animation"],
+                link: "https://akhmad-tegar.itch.io/the-buzzer-is-real",
+                image: "buzzer.png"
+            },
+            {
+                title: "Project: Moon",
+                description: "A 2,5D game where player become a pilot who fight against alien to protect the moon.",
+                tags: ["Mobile Game", "Unity", "Blender", "3D Modelling"],
+                link: "https://kanvas-kosong.itch.io/project-pew-pew",
+                image: "moon.png"
+            }
+        ];
+
+        // --- APP COMPONENT ---
         const App = () => {
             const [isMenuOpen, setIsMenuOpen] = useState(false);
             const [activeSection, setActiveSection] = useState('home');
+            const [showScrollTop, setShowScrollTop] = useState(false);
 
-            const personalInfo = {
-                name: "Ali Zainal Abidin",
-                title: "Game Artist, Game Design, and Animator for Game Development",
-                bio: "I make 2D, 3D, pixel asset, and animation for games.",
-                email: "presslez55@gmail.com",
-                itchio: "https://presslez55.itch.io/",
-                linkedin: "https://linkedin.com/in/ali-alhasni",
-                location: "Jawa Timur, kota Surabaya",
-                profileImage: "./profile.jpg"
+            useEffect(() => {
+                const handleScroll = () => {
+                    setShowScrollTop(window.scrollY > 400);
+                };
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            const scrollToTop = () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             };
-
-            const skills = [
-                { category: "3D", items: ["Blender", "Solid Edge"] },
-                { category: "2D", items: ["InkScape", "Krita", "PhotoShop", "Corel Draw"] },
-                { category: "Pixel", items: ["Aseprite"] }
-            ];
-
-            const experience = [
-                {
-                    project: "Project Bank Soal Pusat Assesment Pendidikan Kemendikbud",
-                    role: "Junior Game Design",
-                    period: "June - December 2024",
-                    description: "Breakdowning game references to make simulation for school exam."
-                },
-                {
-                    project: "Mandala: The Minds Journey",
-                    role: "3D Artist",
-                    period: "2024 - 2025",
-                    description: "Making a set of animation for character movement."
-                },
-                {
-                    project: "The Buzzer is Real?",
-                    role: "3D Artist",
-                    period: "November 2025",
-                    description: "Making a set of animation for character movement."
-                }
-            ];
-
-            const projects = [
-                {
-                    title: "Mandala: The Minds Journey",
-                    description: "The Mind’s Journey adalah sebuah game adventure 3D Psikological Horor, dimana pemain berperan sebagai Mandala seseorang yang terbangun di dunia yang hancur dan penuh teka-teki.",
-                    tags: ["Unity", "Blender", "3D Animation"],
-                    link: "https://jasuke-studio.itch.io/mandala-themindsjourney",
-                    image: "mandala.png"
-                },
-                {
-                    title: "The Buzzer is Real?",
-                    description: "A 2,5D game where player collect as many loyal voters as possible and protect them from rival buzzers.",
-                    tags: ["Unity", "Blender", "3D Animation"],
-                    link: "https://akhmad-tegar.itch.io/the-buzzer-is-real",
-                    image: "buzzer.png"
-                },
-                {
-                    title: "Project: Moon",
-                    description: "A 2,5D game where player become a pilot who fight against alien to protect the moon.",
-                    tags: ["Mobile Game", "Unity", "Blender", "3D Modelling"],
-                    link: "https://kanvas-kosong.itch.io/project-pew-pew",
-                    image: "moon.png"
-                }
-            ];
 
             return (
                 <div className="min-h-screen bg-slate-50 font-sans">
@@ -370,14 +461,30 @@
                                 {experience.map((exp, idx) => (
                                     <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group hover:shadow-md transition-all">
                                         <div className="absolute top-0 left-0 w-1 h-full bg-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                                            <div>
-                                                <h3 className="text-xl font-bold text-slate-900">{exp.role}</h3>
-                                                <p className="text-indigo-600 font-medium">{exp.project}</p>
+                                        <div className="flex flex-col md:flex-row justify-between gap-6">
+                                            <div className="flex-1">
+                                                <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                                                    <div>
+                                                        <h3 className="text-xl font-bold text-slate-900">{exp.role}</h3>
+                                                        <p className="text-indigo-600 font-medium">{exp.project}</p>
+                                                    </div>
+                                                    <span className="text-slate-400 text-sm mt-2 md:mt-0 bg-slate-50 px-3 py-1 rounded-full">{exp.period}</span>
+                                                </div>
+                                                <p className="text-slate-600 leading-relaxed">{exp.description}</p>
                                             </div>
-                                            <span className="text-slate-400 text-sm mt-2 md:mt-0 bg-slate-50 px-3 py-1 rounded-full">{exp.period}</span>
+                                            {exp.animation && (
+                                                <div className="flex-shrink-0 flex items-center justify-center bg-slate-50 rounded-xl p-4 border border-slate-100">
+                                                    <SpriteAnimator
+                                                        spriteSheet={exp.animation.spriteSheet}
+                                                        frameWidth={exp.animation.frameWidth}
+                                                        frameHeight={exp.animation.frameHeight}
+                                                        states={exp.animation.states}
+                                                        initialState={exp.animation.initialState}
+                                                        scale={exp.animation.scale}
+                                                    />
+                                                </div>
+                                            )}
                                         </div>
-                                        <p className="text-slate-600 leading-relaxed">{exp.description}</p>
                                     </div>
                                 ))}
                             </div>
@@ -437,7 +544,9 @@
                             </p>
 
                             <a
-                                href={`mailto:${personalInfo.email}`}
+                                href="https://mail.google.com/mail/?view=cm&fs=1&to=presslez55@gmail.com"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-500 transition-all transform hover:scale-105"
                             >
                                 <Mail size={20} />
@@ -454,6 +563,17 @@
                             </div>
                         </div>
                     </section>
+
+                    {/* Back to Top Button */}
+                    {showScrollTop && (
+                        <button
+                            onClick={scrollToTop}
+                            className="fixed bottom-8 right-8 p-4 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-all duration-300 z-50 animate-bounce"
+                            aria-label="Back to top"
+                        >
+                            <ArrowUp size={24} />
+                        </button>
+                    )}
                 </div>
             );
         };
