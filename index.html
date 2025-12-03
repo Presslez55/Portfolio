@@ -43,544 +43,800 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
-    </style>
-</head>
 
-<body class="bg-slate-50 text-slate-800">
+        <div id="root"></div><script type="text/babel" data-presets="react"> // Error Handling
 
-    <div id="root"></div>
-
-    <script type="text/babel" data-presets="react">
-        // Error Handling
-        if (typeof React === 'undefined' || typeof ReactDOM === 'undefined') {
-            document.body.innerHTML = '<div style="padding: 20px; color: red; font-family: sans-serif;"><h1>Error: React failed to load</h1><p>Please check your internet connection and try refreshing the page.</p></div>';
+        if (typeof React==='undefined' || typeof ReactDOM==='undefined') {
+            document.body.innerHTML='<div style="padding: 20px; color: red; font-family: sans-serif;"><h1>Error: React failed to load</h1><p>Please check your internet connection and try refreshing the page.</p></div>';
             throw new Error("React not loaded");
         }
 
-        const { useState, useEffect, useRef, useMemo } = React;
+        const {
+            useState,
+            useEffect,
+            useRef,
+            useMemo
+        }
+
+        =React;
 
         // Register GSAP Plugin safely
-        if (typeof ScrollTrigger !== 'undefined') {
+        if (typeof ScrollTrigger !=='undefined') {
             gsap.registerPlugin(ScrollTrigger);
-        } else {
+        }
+
+        else {
             console.warn("ScrollTrigger not loaded");
         }
 
         // --- SCROLL REVEAL COMPONENT ---
-        const ScrollReveal = ({
+        const ScrollReveal=({
             children,
             scrollContainerRef,
-            enableBlur = true,
-            baseOpacity = 0.1,
-            baseRotation = 3,
-            blurStrength = 4,
-            containerClassName = '',
-            textClassName = '',
-            rotationEnd = 'bottom bottom',
-            wordAnimationEnd = 'bottom bottom'
-        }) => {
-            const containerRef = useRef(null);
+            enableBlur=true,
+            baseOpacity=0.1,
+            baseRotation=3,
+            blurStrength=4,
+            containerClassName='',
+            textClassName='',
+            rotationEnd='bottom bottom',
+            wordAnimationEnd='bottom bottom'
 
-            const splitText = useMemo(() => {
-                const text = typeof children === 'string' ? children : '';
-                return text.split(/(\s+)/).map((word, index) => {
-                    if (word.match(/^\s+$/)) return word;
-                    return (
-                        <span className="word" key={index}>
-                            {word}
-                        </span>
-                    );
-                });
-            }, [children]);
+        })=> {
+            const containerRef=useRef(null);
 
-            useEffect(() => {
-                const el = containerRef.current;
-                if (!el) return;
+            const splitText=useMemo(()=> {
+                    const text=typeof children==='string' ? children : '';
 
-                const scroller = scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;
+                    return text.split(/(\s+)/).map((word, index)=> {
+                            if (word.match(/^\s+$/)) return word;
 
-                gsap.fromTo(
-                    el,
-                    { transformOrigin: '0% 50%', rotate: baseRotation },
-                    {
-                        ease: 'none',
-                        rotate: 0,
-                        scrollTrigger: {
-                            trigger: el,
-                            scroller,
-                            start: 'top bottom',
-                            end: rotationEnd,
-                            scrub: true
-                        }
-                    }
-                );
+                            return (<span className="word" key= {
+                                    index
+                                }
 
-                const wordElements = el.querySelectorAll('.word');
+                                > {
+                                    word
+                                }
 
-                gsap.fromTo(
-                    wordElements,
-                    { opacity: baseOpacity, willChange: 'opacity' },
-                    {
-                        ease: 'none',
-                        opacity: 1,
-                        stagger: 0.05,
-                        scrollTrigger: {
-                            trigger: el,
-                            scroller,
-                            start: 'top bottom-=20%',
-                            end: wordAnimationEnd,
-                            scrub: true
-                        }
-                    }
-                );
-
-                if (enableBlur) {
-                    gsap.fromTo(
-                        wordElements,
-                        { filter: `blur(${blurStrength}px)` },
-                        {
-                            ease: 'none',
-                            filter: 'blur(0px)',
-                            stagger: 0.05,
-                            scrollTrigger: {
-                                trigger: el,
-                                scroller,
-                                start: 'top bottom-=20%',
-                                end: wordAnimationEnd,
-                                scrub: true
-                            }
-                        }
-                    );
+                                </span>);
+                        });
                 }
 
-                return () => {
-                    ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-                };
-            }, [scrollContainerRef, enableBlur, baseRotation, baseOpacity, rotationEnd, wordAnimationEnd, blurStrength]);
+                , [children]);
 
-            return (
-                <h2 ref={containerRef} className={`scroll-reveal ${containerClassName}`}>
-                    <p className={`scroll-reveal-text ${textClassName}`}>{splitText}</p>
-                </h2>
-            );
-        };
+            useEffect(()=> {
+                    const el=containerRef.current;
+                    if ( !el) return;
+
+                    const scroller=scrollContainerRef && scrollContainerRef.current ? scrollContainerRef.current : window;
+
+                    gsap.fromTo(el,
+                        {
+                        transformOrigin: '0% 50%', rotate: baseRotation
+                    }
+
+                    ,
+                    {
+
+                    ease: 'none',
+                    rotate: 0,
+                    scrollTrigger: {
+                        trigger: el,
+                        scroller,
+                        start: 'top bottom',
+                        end: rotationEnd,
+                        scrub: true
+                    }
+                });
+
+            const wordElements=el.querySelectorAll('.word');
+
+            gsap.fromTo(wordElements,
+                {
+                opacity: baseOpacity, willChange: 'opacity'
+            }
+
+            ,
+            {
+
+            ease: 'none',
+            opacity: 1,
+            stagger: 0.05,
+            scrollTrigger: {
+                trigger: el,
+                scroller,
+                start: 'top bottom-=20%',
+                end: wordAnimationEnd,
+                scrub: true
+            }
+        });
+
+        if (enableBlur) {
+
+            gsap.fromTo(wordElements,
+                {
+                filter: `blur($ {
+                        blurStrength
+                    }
+
+                    px)`
+            }
+
+            ,
+            {
+
+            ease: 'none',
+            filter: 'blur(0px)',
+            stagger: 0.05,
+            scrollTrigger: {
+                trigger: el,
+                scroller,
+                start: 'top bottom-=20%',
+                end: wordAnimationEnd,
+                scrub: true
+            }
+        });
+        }
+
+        return ()=> {
+            ScrollTrigger.getAll().forEach(trigger=> trigger.kill());
+        }
+
+        ;
+        }
+
+        , [scrollContainerRef, enableBlur, baseRotation, baseOpacity, rotationEnd, wordAnimationEnd, blurStrength]);
+
+        return (<h2 ref= {
+                containerRef
+            }
+
+            className= {
+                `scroll-reveal $ {
+                    containerClassName
+                }
+
+                `
+            }
+
+            > <p className= {
+                `scroll-reveal-text $ {
+                    textClassName
+                }
+
+                `
+            }
+
+            > {
+                splitText
+            }
+
+            </p> </h2>);
+        }
+
+        ;
 
         // --- ICONS ---
-        const Icon = ({ children, className }) => (
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
-                {children}
-            </svg>
-        );
+        const Icon=({
+            children, className
 
-        const Gamepad = ({ size = 24, className }) => (
-            <Icon className={className}><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S19.17 9 20 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" /></Icon>
-        );
+        })=>(<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className= {
+                className
+            }
 
-        const User = ({ size = 24, className }) => (
-            <Icon className={className}><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></Icon>
-        );
+            > {
+                children
+            }
 
-        const Cpu = ({ size = 24, className }) => (
-            <Icon className={className}><rect x="4" y="4" width="16" height="16" rx="2" /><rect x="9" y="9" width="6" height="6" /><path d="M15 2v2" /><path d="M15 20v2" /><path d="M2 15h2" /><path d="M2 9h2" /><path d="M20 15h2" /><path d="M20 9h2" /><path d="M9 2v2" /><path d="M9 20v2" /></Icon>
-        );
+            </svg>);
 
-        const ArrowUp = ({ size = 24, className }) => (
-            <Icon className={className}><line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" /></Icon>
-        );
+        const Gamepad=({
+            size=24, className
 
-        const ExternalLink = ({ size = 24, className }) => (
-            <Icon className={className}><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></Icon>
-        );
+        })=>(<Icon className= {
+                className
+            }
 
-        const Mail = ({ size = 24, className }) => (
-            <Icon className={className}><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></Icon>
-        );
-        const MenuIcon = ({ size = 24, className }) => (
-            <Icon className={className}><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></Icon>
-        );
+            ><path d="M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S19.17 9 20 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z" /></Icon>);
 
-        const XIcon = ({ size = 24, className }) => (
-            <Icon className={className}><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></Icon>
-        );
+        const User=({
+            size=24, className
+
+        })=>(<Icon className= {
+                className
+            }
+
+            ><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" /></Icon>);
+
+        const Cpu=({
+            size=24, className
+
+        })=>(<Icon className= {
+                className
+            }
+
+            ><rect x="4" y="4" width="16" height="16" rx="2" /><rect x="9" y="9" width="6" height="6" /><path d="M15 2v2" /><path d="M15 20v2" /><path d="M2 15h2" /><path d="M2 9h2" /><path d="M20 15h2" /><path d="M20 9h2" /><path d="M9 2v2" /><path d="M9 20v2" /></Icon>);
+
+        const ArrowUp=({
+            size=24, className
+
+        })=>(<Icon className= {
+                className
+            }
+
+            ><line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" /></Icon>);
+
+        const ExternalLink=({
+            size=24, className
+
+        })=>(<Icon className= {
+                className
+            }
+
+            ><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" /><polyline points="15 3 21 3 21 9" /><line x1="10" y1="14" x2="21" y2="3" /></Icon>);
+
+        const Mail=({
+            size=24, className
+
+        })=>(<Icon className= {
+                className
+            }
+
+            ><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" /><polyline points="22,6 12,13 2,6" /></Icon>);
+
+        const MenuIcon=({
+            size=24, className
+
+        })=>(<Icon className= {
+                className
+            }
+
+            ><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="18" x2="21" y2="18" /></Icon>);
+
+        const XIcon=({
+            size=24, className
+
+        })=>(<Icon className= {
+                className
+            }
+
+            ><line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" /></Icon>);
 
         // --- SPRITE ANIMATOR ---
-        const SpriteAnimator = ({ spriteSheet, frameWidth, frameHeight, states, initialState = 'idle', scale = 1 }) => {
-            const canvasRef = useRef(null);
-            const [currentState, setCurrentState] = useState(initialState);
-            const requestRef = useRef();
-            const frameRef = useRef(0);
-            const lastUpdateRef = useRef(0);
+        const SpriteAnimator=({
+            spriteSheet, frameWidth, frameHeight, states, initialState='idle', scale=1
 
-            useEffect(() => {
-                const canvas = canvasRef.current;
-                const ctx = canvas.getContext('2d');
-                const image = new Image();
-                image.src = spriteSheet;
+        })=> {
+            const canvasRef=useRef(null);
+            const [currentState,
+            setCurrentState]=useState(initialState);
+            const requestRef=useRef();
+            const frameRef=useRef(0);
+            const lastUpdateRef=useRef(0);
 
-                const animate = (time) => {
-                    if (!lastUpdateRef.current) lastUpdateRef.current = time;
-                    const deltaTime = time - lastUpdateRef.current;
+            useEffect(()=> {
+                    const canvas=canvasRef.current;
+                    const ctx=canvas.getContext('2d');
+                    const image=new Image();
+                    image.src=spriteSheet;
 
-                    // Update frame every 100ms (10fps)
-                    if (deltaTime > 100) {
-                        const stateData = states[currentState];
-                        if (stateData) {
-                            const { row, frames } = stateData;
-                            frameRef.current = (frameRef.current + 1) % frames;
+                    const animate=(time)=> {
+                        if ( !lastUpdateRef.current) lastUpdateRef.current=time;
+                        const deltaTime=time - lastUpdateRef.current;
 
-                            ctx.clearRect(0, 0, canvas.width, canvas.height);
-                            ctx.drawImage(
-                                image,
-                                frameRef.current * frameWidth,
-                                row * frameHeight,
-                                frameWidth,
-                                frameHeight,
-                                0,
-                                0,
-                                frameWidth,
-                                frameHeight
-                            );
+                        // Update frame every 100ms (10fps)
+                        if (deltaTime > 100) {
+                            const stateData=states[currentState];
+
+                            if (stateData) {
+                                const {
+                                    row, frames
+                                }
+
+                                =stateData;
+                                frameRef.current=(frameRef.current + 1) % frames;
+
+                                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                                ctx.drawImage(image,
+                                    frameRef.current * frameWidth,
+                                    row * frameHeight,
+                                    frameWidth,
+                                    frameHeight,
+                                    0,
+                                    0,
+                                    frameWidth,
+                                    frameHeight);
+                            }
+
+                            lastUpdateRef.current=time;
                         }
-                        lastUpdateRef.current = time;
+
+                        requestRef.current=requestAnimationFrame(animate);
                     }
-                    requestRef.current = requestAnimationFrame(animate);
-                };
 
-                image.onload = () => {
-                    canvas.width = frameWidth;
-                    canvas.height = frameHeight;
-                    requestRef.current = requestAnimationFrame(animate);
-                };
+                    ;
 
-                return () => cancelAnimationFrame(requestRef.current);
-            }, [spriteSheet, frameWidth, frameHeight, states, currentState]);
+                    image.onload=()=> {
+                        canvas.width=frameWidth;
+                        canvas.height=frameHeight;
+                        requestRef.current=requestAnimationFrame(animate);
+                    }
 
-            return (
-                <div
-                    className="sprite-container"
-                    style={{
+                    ;
+
+                    return ()=> cancelAnimationFrame(requestRef.current);
+                }
+
+                , [spriteSheet, frameWidth, frameHeight, states, currentState]);
+
+            return (<div className="sprite-container"
+
+                style= {
+                        {
                         width: frameWidth * scale,
                         height: frameHeight * scale,
                         display: 'inline-block',
-                    }}
-                >
-                    <canvas
-                        ref={canvasRef}
-                        style={{
-                            width: '100%',
-                            height: '100%',
-                            imageRendering: 'pixelated'
-                        }}
-                    />
-                </div>
-            );
-        };
+                    }
+                }
+
+                > <canvas ref= {
+                    canvasRef
+                }
+
+                style= {
+                        {
+                        width: '100%',
+                        height: '100%',
+                        imageRendering: 'pixelated'
+                    }
+                }
+
+                /> </div>);
+        }
+
+        ;
 
         // --- DATA ---
-        const personalInfo = {
+        const personalInfo= {
             name: "Ali Zainal Abidin",
-            title: "Game Designer & 3D Artist",
-            bio: "Passionate about creating immersive gaming experiences.",
-            profileImage: "profile.jpg",
-            itchio: "https://presslez55.itch.io",
-            linkedin: "https://linkedin.com/in/ali-alhasni"
-        };
+                title: "Game Designer & 3D Artist",
+                bio: "Passionate about creating immersive gaming experiences.",
+                profileImage: "profile.jpg",
+                itchio: "https://presslez55.itch.io",
+                linkedin: "https://linkedin.com/in/ali-alhasni"
+        }
 
-        const skills = [
-            { category: '3D', items: ['Blender', 'Solid Edge'] },
-            { category: '2D', items: ['Photoshop', 'CorelDraw', 'InkScape', 'Krita'] },
-            { category: 'Pixel', items: ['Aseprite'] }
+        ;
+
+        const skills=[ {
+            category: '3D', items: ['Blender', 'Solid Edge']
+        }
+
+        ,
+        {
+        category: '2D', items: ['Photoshop', 'CorelDraw', 'InkScape', 'Krita']
+        }
+
+        ,
+        {
+        category: 'Pixel', items: ['Aseprite']
+        }
+
         ];
 
-        const experience = [
-            {
-                project: "Project Bank Soal Pusat Assesment Pendidikan Kemendikbud",
+        const experience=[ {
+            project: "Project Bank Soal Pusat Assesment Pendidikan Kemendikbud",
                 role: "Junior Game Design",
                 period: "June - December 2024",
                 description: "Membedah, mekanik permainan untuk diimplementasikan ke dalam gamifikasi ujian sekolah berbasis komputer dalam bentuk simulasi. Juga membuat list kebutuhan asset dan UI/UX dalam permainan."
-            },
-            {
-                project: "Mandala: The Minds Journey",
-                role: "3D Artist",
-                period: "2024 - 2025",
-                description: "Membuat animasi gerak untuk karakter didalam game, yaitu Mandala (MC) dan Monster. Animasi gerak mandala meliputi (Jalan, Lari, Tertangkap, Idle, Bangun), sedangkan untuk Monster meliputi (Jalan, Lari, dan Menangkap)."
+        }
 
-            },
-            {
-                project: "The Buzzer is Real?",
-                role: "3D Artist",
-                period: "November 2025",
-                description: "Membuat animasi gerak untuk karakter didalam game, Yaitu Buzzers dan Voters. Animasi Buzzers dan Voters tidak jauh berbeda yaitu (Lari, Idle, dan Win)."
+        ,
+        {
+        project: "Mandala: The Minds Journey",
+            role: "3D Artist",
+            period: "2024 - 2025",
+            description: "Membuat animasi gerak untuk karakter didalam game, yaitu Mandala (MC) dan Monster. Animasi gerak mandala meliputi (Jalan, Lari, Tertangkap, Idle, Bangun), sedangkan untuk Monster meliputi (Jalan, Lari, dan Menangkap)."
 
-            },
-            {
-                project: "Project: Moon",
-                role: "3D Artist",
-                period: "November 2025",
-                description: "Membuat 3D modelling pesawat sebagai karakter, dimana terdapat 4 jenis pesawat (Player dan Enemy)."
+        }
 
-            }
+        ,
+        {
+        project: "The Buzzer is Real?",
+            role: "3D Artist",
+            period: "November 2025",
+            description: "Membuat animasi gerak untuk karakter didalam game, Yaitu Buzzers dan Voters. Animasi Buzzers dan Voters tidak jauh berbeda yaitu (Lari, Idle, dan Win)."
+
+        }
+
+        ,
+        {
+        project: "Project: Moon",
+            role: "3D Artist",
+            period: "November 2025",
+            description: "Membuat 3D modelling pesawat sebagai karakter, dimana terdapat 4 jenis pesawat (Player dan Enemy)."
+
+        }
+
         ];
 
-        const projects = [
-            {
-                title: "Mandala: The Minds Journey",
+        const projects=[ {
+            title: "Mandala: The Minds Journey",
                 description: "The Mind’s Journey adalah sebuah game adventure 3D Psikological Horor, dimana pemain berperan sebagai Mandala seseorang yang terbangun di dunia yang hancur dan penuh teka-teki.",
                 tags: ["Unity", "Blender", "3D Animation"],
                 link: "https://jasuke-studio.itch.io/mandala-themindsjourney",
                 image: "mandala.png"
-            },
-            {
-                title: "The Buzzer is Real?",
-                description: "A 2,5D game where player collect as many loyal voters as possible and protect them from rival buzzers.",
-                tags: ["Unity", "Blender", "3D Animation"],
-                link: "https://akhmad-tegar.itch.io/the-buzzer-is-real",
-                image: "buzzer.png"
-            },
-            {
-                title: "Project: Moon",
-                description: "A 2,5D game where player become a pilot who fight against alien to protect the moon.",
-                tags: ["Mobile Game", "Unity", "Blender", "3D Modelling"],
-                link: "https://kanvas-kosong.itch.io/project-pew-pew",
-                image: "moon.png"
-            }
+        }
+
+        ,
+        {
+        title: "The Buzzer is Real?",
+            description: "A 2,5D game where player collect as many loyal voters as possible and protect them from rival buzzers.",
+            tags: ["Unity", "Blender", "3D Animation"],
+            link: "https://akhmad-tegar.itch.io/the-buzzer-is-real",
+            image: "buzzer.png"
+        }
+
+        ,
+        {
+        title: "Project: Moon",
+            description: "A 2,5D game where player become a pilot who fight against alien to protect the moon.",
+            tags: ["Mobile Game", "Unity", "Blender", "3D Modelling"],
+            link: "https://kanvas-kosong.itch.io/project-pew-pew",
+            image: "moon.png"
+        }
+
         ];
 
         // --- APP COMPONENT ---
-        const App = () => {
-            const [isMenuOpen, setIsMenuOpen] = useState(false);
-            const [activeSection, setActiveSection] = useState('home');
-            const [showScrollTop, setShowScrollTop] = useState(false);
+        const App=()=> {
+            const [isMenuOpen,
+            setIsMenuOpen]=useState(false);
+            const [activeSection,
+            setActiveSection]=useState('home');
+            const [showScrollTop,
+            setShowScrollTop]=useState(false);
 
-            useEffect(() => {
-                const handleScroll = () => {
-                    setShowScrollTop(window.scrollY > 400);
-                };
-                window.addEventListener('scroll', handleScroll);
-                return () => window.removeEventListener('scroll', handleScroll);
-            }, []);
+            useEffect(()=> {
+                    const handleScroll=()=> {
+                        setShowScrollTop(window.scrollY > 400);
+                    }
 
-            const scrollToTop = () => {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            };
+                    ;
+                    window.addEventListener('scroll', handleScroll);
+                    return ()=> window.removeEventListener('scroll', handleScroll);
+                }
 
-            return (
-                <div className="min-h-screen bg-slate-50 font-sans">
-                    {/* Navbar */}
-                    <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-slate-200">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <div className="flex justify-between items-center h-16">
-                                <span className="text-xl font-bold text-indigo-600">Portfolio</span>
-                                <div className="hidden md:flex space-x-8">
-                                    {['Home', 'Skills', 'Experience', 'Projects', 'Contact'].map((item) => (
-                                        <a key={item} href={`#${item.toLowerCase()}`} className="text-slate-600 hover:text-indigo-600 transition-colors">
-                                            {item}
-                                        </a>
-                                    ))}
-                                </div>
-                                <button className="md:hidden text-slate-600" onClick={() => setIsMenuOpen(!isMenuOpen)}>
-                                    {isMenuOpen ? <XIcon /> : <MenuIcon />}
-                                </button>
-                            </div>
-                        </div>
-                        {/* Mobile Menu */}
-                        {isMenuOpen && (
-                            <div className="md:hidden bg-white border-t border-slate-100 py-4 px-4 flex flex-col space-y-4">
-                                {['Home', 'Skills', 'Experience', 'Projects', 'Contact'].map((item) => (
-                                    <a key={item} href={`#${item.toLowerCase()}`} className="text-slate-600 hover:text-indigo-600 block" onClick={() => setIsMenuOpen(false)}>
-                                        {item}
-                                    </a>
-                                ))}
-                            </div>
-                        )}
-                    </nav>
+                , []);
 
-                    {/* Hero Section */}
-                    <section id="home" className="pt-32 pb-20 px-4">
-                        <div className="max-w-7xl mx-auto text-center">
-                            <div className="mb-8">
-                                <img
-                                    src={personalInfo.profileImage}
-                                    alt={personalInfo.name}
-                                    className="w-64 h-64 rounded-full mx-auto object-cover shadow-lg border-4 border-white"
-                                />
-                            </div>
-                            <div className="mb-6 inline-block p-2 px-4 rounded-full bg-indigo-50 text-indigo-600 font-medium text-sm">
-                                Available for work
-                            </div>
+            const scrollToTop=()=> {
+                window.scrollTo({
+                    top: 0, behavior: 'smooth'
+                });
+        }
 
-                            <ScrollReveal textClassName="text-5xl md:text-7xl font-bold text-slate-900 mb-6 tracking-tight">
-                                {personalInfo.name}
-                            </ScrollReveal>
+        ;
 
-                            <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed">
-                                {personalInfo.title}. {personalInfo.bio}
-                            </p>
-                            <div className="flex justify-center gap-4">
-                                <a href="#projects" className="px-8 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors">
-                                    View Work
-                                </a>
-                                <a href={personalInfo.itchio} target="_blank" className="px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg font-medium hover:bg-slate-50 transition-colors flex items-center gap-2">
-                                    <Gamepad size={20} /> Itch.io
-                                </a>
-                            </div>
-                        </div>
-                    </section>
+        return (<div className="min-h-screen bg-slate-50 font-sans" > {
+                /* Navbar */
+            }
 
-                    {/* Skills Section */}
-                    <section id="skills" className="py-20 bg-white">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center">Technical Skills</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                                {skills.map((skillGroup, idx) => (
-                                    <div key={idx} className="p-6 bg-slate-50 rounded-2xl border border-slate-100">
-                                        <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                                            {skillGroup.category === '3D' && <Cpu size={24} className="text-indigo-600" />}
-                                            {skillGroup.category === '2D' && <User size={24} className="text-purple-600" />}
-                                            {skillGroup.category === 'Pixel' && <Gamepad size={24} className="text-pink-600" />}
-                                            {skillGroup.category}
-                                        </h3>
-                                        <div className="flex flex-wrap gap-3">
-                                            {skillGroup.items.map((item, i) => (
-                                                <span key={i} className="px-3 py-1 bg-white text-slate-700 rounded-md shadow-sm text-sm font-medium border border-slate-200">
-                                                    {item}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
+            <nav className="fixed top-0 left-0 right-0 bg-white/80 backdrop-blur-md z-50 border-b border-slate-200" > <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" > <div className="flex justify-between items-center h-16" > <span className="text-xl font-bold text-indigo-600" >Portfolio</span> <div className="hidden md:flex space-x-8" > {
+                ['Home', 'Skills', 'Experience', 'Projects', 'Contact'].map((item)=> (<a key= {
+                            item
+                        }
 
-                    {/* Experience Section */}
-                    <section id="experience" className="py-20 bg-slate-50">
-                        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center">Experience</h2>
-                            <div className="space-y-8">
-                                {experience.map((exp, idx) => (
-                                    <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group hover:shadow-md transition-all">
-                                        <div className="absolute top-0 left-0 w-1 h-full bg-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                                        <div className="flex flex-col md:flex-row justify-between gap-6">
-                                            <div className="flex-1">
-                                                <div className="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                                                    <div>
-                                                        <h3 className="text-xl font-bold text-slate-900">{exp.role}</h3>
-                                                        <p className="text-indigo-600 font-medium">{exp.project}</p>
-                                                    </div>
-                                                    <span className="text-slate-400 text-sm mt-2 md:mt-0 bg-slate-50 px-3 py-1 rounded-full">{exp.period}</span>
-                                                </div>
-                                                <p className="text-slate-600 leading-relaxed">{exp.description}</p>
-                                            </div>
-                                            {exp.animation && (
-                                                <div className="flex-shrink-0 flex items-center justify-center bg-slate-50 rounded-xl p-4 border border-slate-100">
-                                                    <SpriteAnimator
-                                                        spriteSheet={exp.animation.spriteSheet}
-                                                        frameWidth={exp.animation.frameWidth}
-                                                        frameHeight={exp.animation.frameHeight}
-                                                        states={exp.animation.states}
-                                                        initialState={exp.animation.initialState}
-                                                        scale={exp.animation.scale}
-                                                    />
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    </section>
+                        href= {
+                            `#$ {
+                                item.toLowerCase()
+                            }
 
-                    {/* Projects Section */}
-                    <section id="projects" className="py-20 bg-white">
-                        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                            <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center">Featured Projects</h2>
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                                {projects.map((project, idx) => (
-                                    <div key={idx} className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col h-full group overflow-hidden">
-                                        {project.image && (
-                                            <div className="h-48 overflow-hidden bg-slate-100 relative">
-                                                <img src={project.image} alt={project.title} className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" />
-                                                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
-                                            </div>
-                                        )}
-                                        <div className="p-6 flex flex-col flex-grow">
-                                            <div className="flex justify-between items-start mb-4">
-                                                <h3 className="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors">{project.title}</h3>
-                                                <a href={project.link} className="text-slate-400 hover:text-indigo-600 p-1 hover:bg-indigo-50 rounded-full transition-all">
-                                                    <ExternalLink size={20} />
-                                                </a>
-                                            </div>
-                                            <p className="text-slate-600 text-sm mb-6 line-clamp-3 leading-relaxed">
-                                                {project.description}
-                                            </p>
-                                            <div className="flex flex-wrap gap-2 mt-auto">
-                                                {project.tags.map((tag, tIdx) => (
-                                                    <span key={tIdx} className="px-2.5 py-1 bg-slate-50 text-slate-600 text-xs font-medium border border-slate-200 rounded-md">
-                                                        {tag}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        </div>
-                                    </div>
-                                ))}
-                            </div>
-                            <div className="mt-12 text-center">
-                                <p className="text-slate-600 mb-4">Want to see more of my work?</p>
-                                <a href={personalInfo.itchio} target="_blank" className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-50 text-indigo-600 font-medium rounded-lg hover:bg-indigo-100 transition-colors">
-                                    <Gamepad size={20} />
-                                    Check out my Itch.io
-                                </a>
-                            </div>
-                        </div>
-                    </section>
+                            `
+                        }
 
-                    {/* Contact Section */}
-                    <section id="contact" className="py-20 bg-slate-900 text-white">
-                        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-                            <h2 className="text-3xl font-bold mb-6">Get In Touch</h2>
-                            <p className="text-slate-400 mb-10 max-w-xl mx-auto">
-                                I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!
-                            </p>
+                        className="text-slate-600 hover:text-indigo-600 transition-colors" > {
+                            item
+                        }
 
-                            <a
-                                href="https://mail.google.com/mail/?view=cm&fs=1&to=presslez55@gmail.com"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-500 transition-all transform hover:scale-105"
-                            >
-                                <Mail size={20} />
-                                Say Hello
-                            </a>
+                        </a>))
+            }
 
-                            <div className="mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm">
-                                <p>© {new Date().getFullYear()} {personalInfo.name}. All rights reserved.</p>
-                                <div className="flex gap-6 mt-4 md:mt-0">
-                                    <a href={personalInfo.itchio} className="hover:text-white transition-colors">Itch.io</a>
-                                    <a href={personalInfo.linkedin} className="hover:text-white transition-colors">LinkedIn</a>
-                                    <a href="https://wa.me/6281914000194" className="hover:text-white transition-colors">WhatsApp</a>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
+            </div> <button className="md:hidden text-slate-600" onClick= {
+                ()=> setIsMenuOpen( !isMenuOpen)
+            }
 
-                    {/* Back to Top Button */}
-                    {showScrollTop && (
-                        <button
-                            onClick={scrollToTop}
-                            className="fixed bottom-8 right-8 p-4 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-all duration-300 z-50 animate-bounce"
-                            aria-label="Back to top"
-                        >
-                            <ArrowUp size={24} />
-                        </button>
-                    )}
-                </div>
-            );
-        };
+            > {
+                isMenuOpen ? <XIcon /> : <MenuIcon />
+            }
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
+            </button> </div> </div> {
+                /* Mobile Menu */
+            }
+
+                {
+                isMenuOpen && (<div className="md:hidden bg-white border-t border-slate-100 py-4 px-4 flex flex-col space-y-4" > {
+                        ['Home', 'Skills', 'Experience', 'Projects', 'Contact'].map((item)=> (<a key= {
+                                    item
+                                }
+
+                                href= {
+                                    `#$ {
+                                        item.toLowerCase()
+                                    }
+
+                                    `
+                                }
+
+                                className="text-slate-600 hover:text-indigo-600 block" onClick= {
+                                    ()=> setIsMenuOpen(false)
+                                }
+
+                                > {
+                                    item
+                                }
+
+                                </a>))
+                    }
+
+                    </div>)
+            }
+
+            </nav> {
+                /* Hero Section */
+            }
+
+            <section id="home" className="pt-32 pb-20 px-4" > <div className="max-w-7xl mx-auto text-center" > <div className="mb-8" > <img src= {
+                personalInfo.profileImage
+            }
+
+            alt= {
+                personalInfo.name
+            }
+
+            className="w-64 h-64 rounded-full mx-auto object-cover shadow-lg border-4 border-white"
+
+            /> </div> <div className="mb-6 inline-block p-2 px-4 rounded-full bg-indigo-50 text-indigo-600 font-medium text-sm" > Available for work </div> <ScrollReveal textClassName="text-5xl md:text-7xl font-bold text-slate-900 mb-6 tracking-tight" > {
+                personalInfo.name
+            }
+
+            </ScrollReveal> <p className="text-xl text-slate-600 mb-10 max-w-2xl mx-auto leading-relaxed" > {
+                personalInfo.title
+            }
+
+            . {
+                personalInfo.bio
+            }
+
+            </p> <div className="flex justify-center gap-4" > <a href="#projects" className="px-8 py-3 bg-indigo-600 text-white rounded-lg font-medium hover:bg-indigo-700 transition-colors" > View Work </a> <a href= {
+                personalInfo.itchio
+            }
+
+            target="_blank" className="px-8 py-3 bg-white text-slate-700 border border-slate-200 rounded-lg font-medium hover:bg-slate-50 transition-colors flex items-center gap-2" > <Gamepad size= {
+                20
+            }
+
+            /> Itch.io </a> </div> </div> </section> {
+                /* Skills Section */
+            }
+
+            <section id="skills" className="py-20 bg-white" > <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" > <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center" >Technical Skills</h2> <div className="grid grid-cols-1 md:grid-cols-3 gap-8" > {
+                skills.map((skillGroup, idx)=> (<div key= {
+                            idx
+                        }
+
+                        className="p-6 bg-slate-50 rounded-2xl border border-slate-100" > <h3 className="text-xl font-bold text-slate-900 mb-6 flex items-center gap-2" > {
+                            skillGroup.category==='3D' && <Cpu size= {
+                                24
+                            }
+
+                            className="text-indigo-600" />
+                        }
+
+                            {
+                            skillGroup.category==='2D' && <User size= {
+                                24
+                            }
+
+                            className="text-purple-600" />
+                        }
+
+                            {
+                            skillGroup.category==='Pixel' && <Gamepad size= {
+                                24
+                            }
+
+                            className="text-pink-600" />
+                        }
+
+                            {
+                            skillGroup.category
+                        }
+
+                        </h3> <div className="flex flex-wrap gap-3" > {
+                            skillGroup.items.map((item, i)=> (<span key= {
+                                        i
+                                    }
+
+                                    className="px-3 py-1 bg-white text-slate-700 rounded-md shadow-sm text-sm font-medium border border-slate-200" > {
+                                        item
+                                    }
+
+                                    </span>))
+                        }
+
+                        </div> </div>))
+            }
+
+            </div> </div> </section> {
+                /* Experience Section */
+            }
+
+            <section id="experience" className="py-20 bg-slate-50" > <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8" > <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center" >Experience</h2> <div className="space-y-8" > {
+                experience.map((exp, idx)=> (<div key= {
+                            idx
+                        }
+
+                        className="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 relative overflow-hidden group hover:shadow-md transition-all" > <div className="absolute top-0 left-0 w-1 h-full bg-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" ></div> <div className="flex flex-col md:flex-row justify-between gap-6" > <div className="flex-1" > <div className="flex flex-col md:flex-row md:items-center justify-between mb-4" > <div> <h3 className="text-xl font-bold text-slate-900" > {
+                            exp.role
+                        }
+
+                        </h3> <p className="text-indigo-600 font-medium" > {
+                            exp.project
+                        }
+
+                        </p> </div> <span className="text-slate-400 text-sm mt-2 md:mt-0 bg-slate-50 px-3 py-1 rounded-full" > {
+                            exp.period
+                        }
+
+                        </span> </div> <p className="text-slate-600 leading-relaxed" > {
+                            exp.description
+                        }
+
+                        </p> </div> {
+                            exp.animation && (<div className="flex-shrink-0 flex items-center justify-center bg-slate-50 rounded-xl p-4 border border-slate-100" > <SpriteAnimator spriteSheet= {
+                                    exp.animation.spriteSheet
+                                }
+
+                                frameWidth= {
+                                    exp.animation.frameWidth
+                                }
+
+                                frameHeight= {
+                                    exp.animation.frameHeight
+                                }
+
+                                states= {
+                                    exp.animation.states
+                                }
+
+                                initialState= {
+                                    exp.animation.initialState
+                                }
+
+                                scale= {
+                                    exp.animation.scale
+                                }
+
+                                /> </div>)
+                        }
+
+                        </div> </div>))
+            }
+
+            </div> </div> </section> {
+                /* Projects Section */
+            }
+
+            <section id="projects" className="py-20 bg-white" > <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" > <h2 className="text-3xl font-bold text-slate-900 mb-12 text-center" >Featured Projects</h2> <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8" > {
+                projects.map((project, idx)=> (<div key= {
+                            idx
+                        }
+
+                        className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-slate-100 flex flex-col h-full group overflow-hidden" > {
+                            project.image && (<div className="h-48 overflow-hidden bg-slate-100 relative" > <img src= {
+                                    project.image
+                                }
+
+                                alt= {
+                                    project.title
+                                }
+
+                                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500" /> <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors" ></div> </div>)
+                        }
+
+                        <div className="p-6 flex flex-col flex-grow" > <div className="flex justify-between items-start mb-4" > <h3 className="text-xl font-bold text-slate-900 group-hover:text-indigo-600 transition-colors" > {
+                            project.title
+                        }
+
+                        </h3> <a href= {
+                            project.link
+                        }
+
+                        className="text-slate-400 hover:text-indigo-600 p-1 hover:bg-indigo-50 rounded-full transition-all" > <ExternalLink size= {
+                            20
+                        }
+
+                        /> </a> </div> <p className="text-slate-600 text-sm mb-6 line-clamp-3 leading-relaxed" > {
+                            project.description
+                        }
+
+                        </p> <div className="flex flex-wrap gap-2 mt-auto" > {
+                            project.tags.map((tag, tIdx)=> (<span key= {
+                                        tIdx
+                                    }
+
+                                    className="px-2.5 py-1 bg-slate-50 text-slate-600 text-xs font-medium border border-slate-200 rounded-md" > {
+                                        tag
+                                    }
+
+                                    </span>))
+                        }
+
+                        </div> </div> </div>))
+            }
+
+            </div> <div className="mt-12 text-center" > <p className="text-slate-600 mb-4" >Want to see more of my work?</p> <a href= {
+                personalInfo.itchio
+            }
+
+            target="_blank" className="inline-flex items-center gap-2 px-6 py-3 bg-indigo-50 text-indigo-600 font-medium rounded-lg hover:bg-indigo-100 transition-colors" > <Gamepad size= {
+                20
+            }
+
+            /> Check out my Itch.io </a> </div> </div> </section> {
+                /* Contact Section */
+            }
+
+            <section id="contact" className="py-20 bg-slate-900 text-white" > <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center" > <h2 className="text-3xl font-bold mb-6" >Get In Touch</h2> <p className="text-slate-400 mb-10 max-w-xl mx-auto" > I'm currently looking for new opportunities. Whether you have a question or just want to say hi, I' ll try my best to get back to you ! </p> <a href="https://mail.google.com/mail/?view=cm&fs=1&to=presslez55@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-8 py-4 bg-indigo-600 text-white font-bold rounded-lg hover:bg-indigo-500 transition-all transform hover:scale-105"
+
+            > <Mail size= {
+                20
+            }
+
+            /> Say Hello </a> <div className="mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center text-slate-500 text-sm" > <p>© {
+                new Date().getFullYear()
+            }
+
+                {
+                personalInfo.name
+            }
+
+            . All rights reserved.</p> <div className="flex gap-6 mt-4 md:mt-0" > <a href= {
+                personalInfo.itchio
+            }
+
+            className="hover:text-white transition-colors" >Itch.io</a> <a href= {
+                personalInfo.linkedin
+            }
+
+            className="hover:text-white transition-colors" >LinkedIn</a> <a href="https://wa.me/6281914000194" className="hover:text-white transition-colors" >WhatsApp</a> </div> </div> </div> </section> {
+                /* Back to Top Button */
+            }
+
+                {
+                showScrollTop && (<button onClick= {
+                        scrollToTop
+                    }
+
+                    className="fixed bottom-8 right-8 p-4 bg-indigo-600 text-white rounded-full shadow-lg hover:bg-indigo-700 transition-all duration-300 z-50 animate-bounce"
+                    aria-label="Back to top"
+
+                    > <ArrowUp size= {
+                        24
+                    }
+
+                    /> </button>)
+            }
+
+            </div>);
+        }
+
+        ;
+
+        const root=ReactDOM.createRoot(document.getElementById('root'));
         root.render(<App />);
-    </script>
-</body>
-
-</html>
+        </script></body></html>
